@@ -1,11 +1,12 @@
 package com.example.integrador1;
 
-import android.content.Context;
-import android.content.Intent;
+import android.Manifest;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,7 +16,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS},0);
+        }
+
     }
 
     @Override
@@ -28,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         unregisterReceiver(this.sr);
-        this.sr.onReceive(this, new Intent("android.provider.Telephony.SMS_RECEIVED"));
         super.onPause();
     }
 }
